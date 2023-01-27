@@ -1,9 +1,11 @@
-from typing import Callable, Optional, Awaitable, overload
-from arashi.context import Context
+from typing import Callable, Optional, Awaitable, overload, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from arashi.context import Context
 
 
-PluginMatcher = Callable[[Context], Awaitable[bool]]
-PluginReceiver = Callable[[Context], Awaitable[None]]
+PluginMatcher = Callable[["Context"], Awaitable[bool]]
+PluginReceiver = Callable[["Context"], Awaitable[None]]
 
 
 class Plugin:
@@ -48,7 +50,7 @@ class Plugin:
 
         return wrapper
 
-    async def do_receive(self, ctx: Context) -> None:
+    async def do_receive(self, ctx: "Context") -> None:
         if any([not await matcher(ctx) for matcher in self.matchers]):
             return
 
