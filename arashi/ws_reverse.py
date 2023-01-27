@@ -1,25 +1,40 @@
 import asyncio
-import websocket
-from arashi.log import logger
-from arashi.event import on_message
+import ujson as json
 
-enable = True
-url = ""
-api_url = ""
-event_url = ""
-use_universal_client = False
+from websockets.exceptions import ConnectionClosedError
+from websockets.legacy.client import connect
+
+from arashi.config import WS_URL
+from arashi.event import on_message
+from arashi.log import logger
+
+
+async def ws_client(ws_server: str):
+    async with connect(ws_server) as ws:
+        if "meta_event_type" in json.loads(await ws.recv()):
+            logger.info(f"Connected to {ws_server}")
+        async for message in ws:
+            asyncio.create_task(on_message(ws, message))
 
 class Client:
     if __name__ == '__main__':
-        WS_APP = websocket.WebSocket(
-            url,
-            on_open=lambda _: logger.debug("连接成功......"),
-            on_close=lambda _: logger.debug("重连中......"),
-            on_message=on_message()
-        )
-
         while True:
-            loop = asyncio.get_event_loop()
-            loop.run_forever(WS_APP)
-            asyncio.sleep(5)
+            try:
+                asyncio.run(ws_client(WS_URL))
+            except KeyboardInterrupt:
+                logger.warning("Closing connection by user.")
+                exit(0)
+            except ConnectionClosedError:
+                logger.warning("Connection closed, retrying in 5 seconds...")
+                asyncio.sleep(5)
+                continue
+            except ConnectionRefusedError:
+                logger.warning(f"{WS_URL} refused connection, retrying in 10 seconds...")
+                asyncio.sleep(10)
+                continue
+            except Exception as e:
+                logger.error(repr(e))
+                logger.warning(f"Retrying in 10 seconds...")
+                asyncio.sleep(10)
+                continue
     
