@@ -5,3 +5,4 @@ class Context:
     arg: str
     message: str
     command: str
+    notice: str

@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from arashi.plugin import Plugin
+from arashi.plugin import Plugin, command
 
 if TYPE_CHECKING:
     from arashi.context import Context
@@ -10,11 +10,7 @@ plugin = Plugin(
     usage='/echo something',
     description='',
 )
-
-
-@plugin.match()
-async def handle_echo_match(ctx: "Context"):
-    return ctx.command == 'echo'
+plugin.match(command('echo'))
 
 
 @plugin.receive()
