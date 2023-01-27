@@ -8,7 +8,7 @@ from arashi.plugin import Plugin
 _loaded_plugins: Dict[str, List[Plugin]] = {}
 
 
-def load_plugins(name: str) -> None:
+def load_plugin_module(name: str) -> None:
     if name in _loaded_plugins:
         logger.warning(f'attempted to load duplicate plugin {name}')
         return
