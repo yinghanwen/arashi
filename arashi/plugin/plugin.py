@@ -1,21 +1,18 @@
 import asyncio
-from typing import Callable, Awaitable, overload, TYPE_CHECKING
-from arashi.plugin.matcher import Matcher
+from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from arashi.context import Context
-
-
-PluginReceiver = Callable[["Context"], Awaitable[None]]
+    from arashi.plugin.matcher import Matcher
+    from arashi.plugin.receiver import Receiver, ReceiverHandler
 
 
 class Plugin:
-    def __init__(self, *, on: Matcher, name: str, usage: str, description: str) -> None:
+    def __init__(self, *, name: str, usage: str, description: str) -> None:
         self._name = name
         self._usage = usage
         self._description = description
-        self._matcher = on
-        self._receivers: list[PluginReceiver] = []
+        self._receivers: list["Receiver"] = []
 
     @property
     def name(self) -> str:
@@ -29,24 +26,11 @@ class Plugin:
     def description(self) -> str:
         return self._description
 
-    @overload
-    def receive(self, receiver: PluginReceiver) -> None: ...
-
-    @overload
-    def receive(self) -> Callable[[PluginReceiver], PluginReceiver]: ...
-
-    def receive(self, receiver=None):
-        if receiver is not None:
-            self._receivers.append(receiver)
-            return
-
-        def wrapper(f: PluginReceiver):
-            self._receivers.append(f)
-            return f
-
+    def receive(self, matcher: "Matcher") -> Callable[[ReceiverHandler], ReceiverHandler]:
+        def wrapper(handler: "ReceiverHandler"):
+            self._receivers.append(Receiver(matcher, handler))
+            return handler
         return wrapper
 
     async def do_receive(self, ctx: "Context") -> None:
-        if not await self._matcher.match(ctx):
-            return
-        await asyncio.gather(receiver(ctx) for receiver in self._receivers)
+        await asyncio.gather(r.receive(ctx) for r in self._receivers)
