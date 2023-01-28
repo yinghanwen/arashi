@@ -10,17 +10,18 @@ _loaded_plugins: Dict[str, List[Plugin]] = {}
 
 def load_plugin_module(name: str) -> None:
     if name in _loaded_plugins:
-        logger.warning(f'attempted to load duplicate plugin {name}')
+        logger.warning(f"attempted to load duplicate plugin {name}")
         return
 
     try:
         module = importlib.import_module(name)
     except ImportError:
-        logger.error(f'failed to load plugin {name}')
+        logger.error(f"failed to load plugin {name}")
         return
 
-    logger.success(f'loaded plugin {name}')
-    _loaded_plugins[name] = [p for p in module.__dict__.values() if isinstance(p, Plugin)]
+    plugins = [p for p in module.__dict__.values() if isinstance(p, Plugin)]
+    logger.success(f"loaded {len(plugins)} plugin(s) from {name}")
+    _loaded_plugins[name] = plugins
 
 
 # 在某个事件被触发时
