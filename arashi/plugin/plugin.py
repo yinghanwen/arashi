@@ -1,3 +1,4 @@
+import asyncio
 from typing import Callable, Optional, Awaitable, overload, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -51,9 +52,7 @@ class Plugin:
         return wrapper
 
     async def do_receive(self, ctx: "Context") -> None:
-        if any([not await matcher(ctx) for matcher in self.matchers]):
+        values = await asyncio.gather(matcher(ctx) for matcher in self.matchers)
+        if not all(values):
             return
-
-        for receiver in self.receivers:
-            await receiver(ctx)
-
+        await asyncio.gather(receiver(ctx) for receiver in self.receivers)
