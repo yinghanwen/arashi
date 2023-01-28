@@ -1,59 +1,40 @@
-from typing import Callable, Optional, Awaitable, overload, TYPE_CHECKING
+import asyncio
+from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from arashi.context import Context
-
-
-PluginMatcher = Callable[["Context"], Awaitable[bool]]
-PluginReceiver = Callable[["Context"], Awaitable[None]]
+    from arashi.plugin.rule import Rule
+    from arashi.plugin.receiver import Receiver, ReceiverHandler
 
 
 class Plugin:
+    """
+    `Plugin` 用来定义一个插件，通过 `receive` 装饰器来添加对应规则下的回调函数。
+    """
+
     def __init__(self, *, name: str, usage: str, description: str) -> None:
-        self.name = name
-        self.usage = usage
-        self.description = description
-        self.matchers = []
-        self.receivers = []
+        self._name = name
+        self._usage = usage
+        self._description = description
+        self._receivers: list["Receiver"] = []
 
-    @overload
-    def match(self, matcher: PluginMatcher) -> None: ...
+    @property
+    def name(self) -> str:
+        return self._name
 
-    @overload
-    def match(self) -> Callable[[PluginMatcher], PluginMatcher]: ...
+    @property
+    def usage(self) -> str:
+        return self._usage
 
-    def match(self, matcher: Optional[PluginMatcher] = None):
-        if matcher:
-            self.matchers.append(matcher)
-            return
+    @property
+    def description(self) -> str:
+        return self._description
 
-        def wrapper(f: PluginMatcher):
-            self.matchers.append(f)
-            return f
-
-        return wrapper
-
-    @overload
-    def receive(self, receiver: PluginReceiver) -> None: ...
-
-    @overload
-    def receive(self) -> Callable[[PluginReceiver], PluginReceiver]: ...
-
-    def receive(self, receiver: Optional[PluginReceiver] = None):
-        if receiver:
-            self.receivers.append(receiver)
-            return
-
-        def wrapper(f: PluginReceiver):
-            self.receivers.append(f)
-            return f
-
+    def receive(self, rule: "Rule") -> Callable[[ReceiverHandler], ReceiverHandler]:
+        def wrapper(handler: "ReceiverHandler"):
+            self._receivers.append(Receiver(rule, handler))
+            return handler
         return wrapper
 
     async def do_receive(self, ctx: "Context") -> None:
-        if any([not await matcher(ctx) for matcher in self.matchers]):
-            return
-
-        for receiver in self.receivers:
-            await receiver(ctx)
-
+        await asyncio.gather(r.receive(ctx) for r in self._receivers)

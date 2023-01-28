@@ -7,12 +7,11 @@ if TYPE_CHECKING:
 
 plugin = Plugin(
     name='echo',
-    usage='/echo something',
+    usage='/echo something or /say something',
     description='',
 )
-plugin.match(command('echo'))
 
 
-@plugin.receive()
+@plugin.receive(command('echo') | command('say'))
 async def handle_echo_receive(ctx: "Context"):
     await ctx.send(ctx.arg)
