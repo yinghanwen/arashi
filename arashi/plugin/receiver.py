@@ -11,7 +11,7 @@ ReceiverHandler = Callable[[Context], Awaitable[None] | None]
 
 class Receiver:
     """
-    `Receiver` 是对 `Plugin` 中的回调函数进一步包装，它只会在自己的 `matcher` 通过后调用回调函数。
+    `Receiver` 是对 `Plugin` 中的回调函数进一步包装，它只会在自己的 `rule` 通过后调用回调函数。
     """
 
     def __init__(self, rule: Rule, handler: ReceiverHandler) -> None:
