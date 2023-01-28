@@ -5,6 +5,7 @@ from arashi.plugin.load import (
     run_plugins as run_plugins,
 )
 from arashi.plugin.matcher import (
+    Matcher as Matcher,
     command as command,
     regex as regex,
     notice as notice,

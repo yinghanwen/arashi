@@ -1,38 +1,21 @@
 import asyncio
-from typing import Callable, Optional, Awaitable, overload, TYPE_CHECKING
+from typing import Callable, Awaitable, overload, TYPE_CHECKING
+from arashi.plugin.matcher import Matcher
 
 if TYPE_CHECKING:
     from arashi.context import Context
 
 
-PluginMatcher = Callable[["Context"], Awaitable[bool]]
 PluginReceiver = Callable[["Context"], Awaitable[None]]
 
 
 class Plugin:
-    def __init__(self, *, name: str, usage: str, description: str) -> None:
-        self.name = name
-        self.usage = usage
-        self.description = description
-        self.matchers = []
-        self.receivers = []
-
-    @overload
-    def match(self, matcher: PluginMatcher) -> None: ...
-
-    @overload
-    def match(self) -> Callable[[PluginMatcher], PluginMatcher]: ...
-
-    def match(self, matcher: Optional[PluginMatcher] = None):
-        if matcher:
-            self.matchers.append(matcher)
-            return
-
-        def wrapper(f: PluginMatcher):
-            self.matchers.append(f)
-            return f
-
-        return wrapper
+    def __init__(self, *, on: Matcher, name: str, usage: str, description: str) -> None:
+        self._name = name
+        self._usage = usage
+        self._description = description
+        self._matcher = on
+        self._receivers: list[PluginReceiver] = []
 
     @overload
     def receive(self, receiver: PluginReceiver) -> None: ...
@@ -40,19 +23,18 @@ class Plugin:
     @overload
     def receive(self) -> Callable[[PluginReceiver], PluginReceiver]: ...
 
-    def receive(self, receiver: Optional[PluginReceiver] = None):
-        if receiver:
-            self.receivers.append(receiver)
+    def receive(self, receiver=None):
+        if receiver is not None:
+            self._receivers.append(receiver)
             return
 
         def wrapper(f: PluginReceiver):
-            self.receivers.append(f)
+            self._receivers.append(f)
             return f
 
         return wrapper
 
     async def do_receive(self, ctx: "Context") -> None:
-        values = await asyncio.gather(matcher(ctx) for matcher in self.matchers)
-        if not all(values):
+        if not await self._matcher.match(ctx):
             return
-        await asyncio.gather(receiver(ctx) for receiver in self.receivers)
+        await asyncio.gather(receiver(ctx) for receiver in self._receivers)

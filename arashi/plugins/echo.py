@@ -6,11 +6,11 @@ if TYPE_CHECKING:
 
 
 plugin = Plugin(
+    on=command('echo') | command('say'),
     name='echo',
-    usage='/echo something',
+    usage='/echo something or /say something',
     description='',
 )
-plugin.match(command('echo'))
 
 
 @plugin.receive()
