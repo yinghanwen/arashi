@@ -1,6 +1,6 @@
 from typing import Any, List, Optional, Tuple, Union
 from websockets.legacy.client import connect, WebSocketClientProtocol as WSClient
-from arashi.log import logger
+from .log import logger
 
 
 async def on_message(ws: WSClient, message: Union[str, bytes]):
