@@ -17,6 +17,18 @@ class Plugin:
         self._matcher = on
         self._receivers: list[PluginReceiver] = []
 
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def usage(self) -> str:
+        return self._usage
+
+    @property
+    def description(self) -> str:
+        return self._description
+
     @overload
     def receive(self, receiver: PluginReceiver) -> None: ...
 
