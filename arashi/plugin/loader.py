@@ -2,12 +2,13 @@ import asyncio
 import importlib
 from typing import TYPE_CHECKING, Iterable
 from itertools import chain
-from arashi.log import logger
-from arashi.plugin import Plugin
+
+from ..log import logger
+from ..plugin import Plugin
 from ..internal import Singleton
 
 if TYPE_CHECKING:
-    from arashi.context import Context
+    from ..context import Context
 
 
 class PluginLoader(Singleton):

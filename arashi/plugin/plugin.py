@@ -2,9 +2,9 @@ import asyncio
 from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from arashi.context import Context
-    from arashi.plugin.rule import Rule
-    from arashi.plugin.receiver import Receiver, ReceiverHandler
+    from ..context import Context
+    from .rule import Rule
+    from .receiver import Receiver, ReceiverHandler
 
 
 class Plugin:
