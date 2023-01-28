@@ -3,11 +3,15 @@ from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from arashi.context import Context
-    from arashi.plugin.matcher import Matcher
+    from arashi.plugin.rule import Rule
     from arashi.plugin.receiver import Receiver, ReceiverHandler
 
 
 class Plugin:
+    """
+    Plugin 用来定义一个插件，通过 receive 装饰器来添加对应规则下的回调函数。
+    """
+
     def __init__(self, *, name: str, usage: str, description: str) -> None:
         self._name = name
         self._usage = usage
@@ -26,9 +30,9 @@ class Plugin:
     def description(self) -> str:
         return self._description
 
-    def receive(self, matcher: "Matcher") -> Callable[[ReceiverHandler], ReceiverHandler]:
+    def receive(self, rule: "Rule") -> Callable[[ReceiverHandler], ReceiverHandler]:
         def wrapper(handler: "ReceiverHandler"):
-            self._receivers.append(Receiver(matcher, handler))
+            self._receivers.append(Receiver(rule, handler))
             return handler
         return wrapper
 

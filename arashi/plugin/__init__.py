@@ -4,8 +4,8 @@ from arashi.plugin.load import (
     iter_plugins as iter_plugins,
     run_plugins as run_plugins,
 )
-from arashi.plugin.matcher import (
-    Matcher as Matcher,
+from arashi.plugin.rule import (
+    Rule as Rule,
     command as command,
     regex as regex,
     notice as notice,

@@ -13,6 +13,11 @@ _loaded_plugins: Dict[str, List[Plugin]] = {}
 
 
 def load_plugin_module(name: str) -> None:
+    """
+    从一个 Python 模块加载插件。
+    :param name: 模块名。
+    """
+
     if name in _loaded_plugins:
         logger.warning(f"attempted to load duplicate plugin {name}")
         return
@@ -29,8 +34,18 @@ def load_plugin_module(name: str) -> None:
 
 
 def iter_plugins() -> Iterable[Plugin]:
+    """
+    遍历所有插件。
+    :return: 用来遍历插件的迭代器。
+    """
+
     return chain.from_iterable(_loaded_plugins.values())
 
 
 async def run_plugins(ctx: "Context") -> None:
+    """
+    运行所有插件。
+    :param ctx: 当前的 Context 对象。
+    """
+
     await asyncio.gather(p.do_receive(ctx) for p in iter_plugins())
