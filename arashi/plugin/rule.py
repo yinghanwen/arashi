@@ -35,14 +35,32 @@ class Rule:
 
 
 def command(cmd: str) -> Rule:
+    """
+    构造匹配对应命令的 `Rule` 对象。
+    :param cmd: 命令内容。
+    :return: 匹配命令的 `Rule` 对象。
+    """
+
     return Rule(lambda ctx: ctx.command == cmd)
 
 
 def regex(r: Union[str, re.Pattern]) -> Rule:
+    """
+    构造匹配对应正则的 `Rule` 对象。
+    :param r: 正则表达式。
+    :return: 匹配对应正则消息的 `Rule` 对象。
+    """
+
     if isinstance(r, str):
         r = re.compile(r)
     return Rule(lambda ctx: bool(r.match(ctx.message)))
 
 
 def notice(notice_type: str) -> Rule:
+    """
+    构造匹配对应通知的 `Rule` 对象。
+    :param notice_type: 通知类型。
+    :return: 匹配对应通知的 `Rule` 对象。
+    """
+
     return Rule(lambda ctx: ctx.notice == notice_type)

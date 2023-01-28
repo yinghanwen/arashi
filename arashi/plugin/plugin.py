@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 class Plugin:
     """
-    Plugin 用来定义一个插件，通过 receive 装饰器来添加对应规则下的回调函数。
+    `Plugin` 用来定义一个插件，通过 `receive` 装饰器来添加对应规则下的回调函数。
     """
 
     def __init__(self, *, name: str, usage: str, description: str) -> None:

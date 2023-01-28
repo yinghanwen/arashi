@@ -14,7 +14,7 @@ _loaded_plugins: Dict[str, List[Plugin]] = {}
 
 def load_plugin_module(name: str) -> None:
     """
-    从一个 Python 模块加载插件。
+    从一个 `Python` 模块加载插件。
     :param name: 模块名。
     """
 
