@@ -1,8 +1,12 @@
+import asyncio
 import importlib
-from typing import List, Dict, Iterable
+from typing import TYPE_CHECKING, List, Dict, Iterable
 from itertools import chain
 from arashi.log import logger
 from arashi.plugin import Plugin
+
+if TYPE_CHECKING:
+    from arashi.context import Context
 
 
 _loaded_plugins: Dict[str, List[Plugin]] = {}
@@ -24,8 +28,9 @@ def load_plugin_module(name: str) -> None:
     _loaded_plugins[name] = plugins
 
 
-# 在某个事件被触发时
-# for plugin in iter_plugins():
-#     await plugin.do_receive(ctx)
 def iter_plugins() -> Iterable[Plugin]:
     return chain.from_iterable(_loaded_plugins.values())
+
+
+async def run_plugins(ctx: "Context") -> None:
+    await asyncio.gather(p.do_receive(ctx) for p in iter_plugins())
