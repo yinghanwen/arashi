@@ -29,8 +29,7 @@ class Matcher:
         return Matcher(handler)
 
     async def match(self, ctx: "Context") -> bool:
-        res = self._handler(ctx)
-        if asyncio.iscoroutine(res):
+        if asyncio.iscoroutine(res := self._handler(ctx)):
             res = await res
         return res
 
