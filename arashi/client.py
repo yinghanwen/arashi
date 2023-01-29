@@ -1,51 +1,48 @@
 """
 Arashi 的 Websockets 连接
-""" 
-import ujson as json
-import time
-
-
-from typing import Union
+"""
+import ujson
+import asyncio
 
 from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import connect, WebSocketClientProtocol as WSClient
 
-from arashi.config import WS_URL
-from arashi.log import logger
-from arashi.plugins import plugin_list
+from .context import Context
+from .plugin import PluginLoader
+from .config import WS_URL
+from .log import logger
 
 
 class Client:
+    def __init__(self):
+        self.tasks: set[asyncio.Task] = set()
 
     async def _listen_ws(self, ws_server: str):
-        """建立 WS 链接"""
+        if count := len(self.tasks):
+            logger.warning(f"Removing undone {count} tasks before listening.")
+            self.tasks.clear()
+
         async with connect(ws_server) as ws:
-            if "meta_event_type" in json.loads(await ws.recv()):
+            if "meta_event_type" in ujson.loads(await ws.recv()):
                 logger.info(f"Connected to {ws_server}")
             async for message in ws:
-                self.on_message(ws, message)
+                task = asyncio.create_task(self.handle_message(ws, message))
+                self.tasks.add(task)
+                task.add_done_callback(self.tasks.discard)
 
-    async def on_message(self, ws: WSClient, message: Union[str, bytes]):
-    # https://github.com/botuniverse/onebot-11/blob/master/event/README.md
-        context = json.loads(message := str(message).strip())
-        if e := context.get(plugin_list):
-            logger.success(f"Call returns -> {e}")
-            # 响应报文通过队列传递给调用 API 的函数
-        elif context.get("meta_event_type"):
-            logger.success(f"Heartbeat meta event -> {context.get('self_id')}")
-        else:
-            logger.info(f"Received event -> {context.get('message_type')}:{context.get('post_type')}")
-            await self.plugin_pool(ws, context)
+    async def handle_message(self, ws: WSClient, message: str | bytes):
+        # https://github.com/botuniverse/onebot-11/blob/master/event/README.md
+        if isinstance(message, bytes):
+            message = message.decode('utf8')
+        context = ujson.loads(message.strip())
 
-    async def plugin_pool(self, ws: WSClient, context: dict):
-        """遍历插件列表并匹配"""
-        # todo: 修改，估计跑不起来
-        for plugin in plugin_list:
-            p = plugin.Plugin(context)
-            if p.match():
-                logger.info(f"Matched Command -> {context.get('raw_message')}")
-                await p.handle()
-    
+        if meta_event := context.get("meta_event_type"):
+            logger.success(f"Heartbeat meta event {meta_event} from {context.get('self_id')}")
+            return
+
+        logger.info(f"Received event -> {context.get('message_type')}:{context.get('post_type')}")
+        await asyncio.gather(p.do_receive(Context(context)) for p in PluginLoader())
+
     async def listen(self):
         while True:
             try:
@@ -55,14 +52,11 @@ class Client:
                 exit(0)
             except ConnectionClosedError:
                 logger.warning("Connection closed, retrying in 5 seconds...")
-                await time.sleep(5)
-                continue
+                await asyncio.sleep(5)
             except ConnectionRefusedError:
                 logger.warning(f"{WS_URL} refused connection, retrying in 10 seconds...")
-                await time.sleep(5)
-                continue
+                await asyncio.sleep(5)
             except Exception as e:
                 logger.error(repr(e))
                 logger.warning(f"Retrying in 10 seconds...")
-                await time.sleep(10)
-                continue
+                await asyncio.sleep(10)
