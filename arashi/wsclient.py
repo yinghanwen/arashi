@@ -1,11 +1,9 @@
 """
 Arashi 的 Websockets 连接
-
 """
 import asyncio
 import ujson as json
 
-from collections import deque
 
 from typing import Union
 

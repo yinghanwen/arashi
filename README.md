@@ -11,7 +11,7 @@ _✨ A new python bot framework ✨_
   <a href="https://pypi.python.org/pypi/arashi">
     <img src="https://img.shields.io/pypi/v/arashi.svg" alt="pypi">
   </a>
-  <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
+  <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="python">
 </p>
 
 </div>
