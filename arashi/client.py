@@ -14,17 +14,18 @@ from .log import logger
 
 
 class Client:
-    def __init__(self):
+    def __init__(self, url: str):
         self.tasks: set[asyncio.Task] = set()
+        self.url = url
 
-    async def _listen_ws(self, ws_server: str):
+    async def _listen(self):
         if count := len(self.tasks):
             logger.warning(f"Removing undone {count} tasks before listening.")
             self.tasks.clear()
 
-        async with connect(ws_server) as ws:
+        async with connect(self.url) as ws:
             if "meta_event_type" in ujson.loads(await ws.recv()):
-                logger.info(f"Connected to {ws_server}")
+                logger.info(f"Connected to {self.url}")
             async for message in ws:
                 task = asyncio.create_task(self.handle_message(ws, message))
                 self.tasks.add(task)
@@ -46,7 +47,7 @@ class Client:
     async def listen(self):
         while True:
             try:
-                await self._listen_ws(WS_URL)
+                await self._listen()
             except KeyboardInterrupt:
                 logger.warning("Closing connection by user")
                 exit(0)
