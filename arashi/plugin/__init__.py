@@ -1,5 +1,5 @@
 from arashi.plugin.plugin import Plugin as Plugin
-from arashi.plugin.loader import PluginLoader as PluginLoader
+from arashi.plugin.pool import PluginPool as PluginPool
 from arashi.plugin.rule import (
     Rule as Rule,
     command as command,
