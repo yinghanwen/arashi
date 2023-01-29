@@ -7,7 +7,7 @@ from ..plugin import Plugin
 from ..internal import Singleton
 
 
-class PluginLoader(Singleton):
+class PluginPool(Singleton):
     def __init__(self) -> None:
         self.plugins: dict[str, list[Plugin]] = {}
 

@@ -8,7 +8,7 @@ from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import connect, WebSocketClientProtocol as WSClient
 
 from .context import Context
-from .plugin import PluginLoader
+from .plugin import PluginPool
 from .config import WS_URL
 from .log import logger
 
@@ -42,7 +42,7 @@ class Client:
             return
 
         logger.info(f"Received event -> {context.get('message_type')}:{context.get('post_type')}")
-        await asyncio.gather(p.do_receive(Context(context)) for p in PluginLoader())
+        await asyncio.gather(p.do_receive(Context(context)) for p in PluginPool())
 
     async def listen(self):
         while True:
