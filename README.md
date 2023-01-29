@@ -11,7 +11,7 @@ _✨ A new python bot framework ✨_
   <a href="https://pypi.python.org/pypi/arashi">
     <img src="https://img.shields.io/pypi/v/arashi.svg" alt="pypi">
   </a>
-  <img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="python">
+  <img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="python">
 </p>
 
 </div>
@@ -62,11 +62,12 @@ Discord Bot 协议
 
 ## 驱动框架
 
-### ·[FastAPI](https://fastapi.tiangolo.com/)
-FastAPI framework, high performance, easy to learn, fast to code, ready for production.
 
 ### ·[Websockets](https://websockets.readthedocs.io/en/stable/)
 A library for building WebSocket servers and clients in Python with a focus on correctness, simplicity, robustness, and performance.
+
+状态：开发中
+维护者：官方
 
 ## 开源协议
 Arashi 采用 MIT 协议开源
@@ -80,10 +81,11 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-## 感谢
-在此向 Arashi 开发者表达感谢，Arashi 因你们而变强
+## 贡献
 
-<a href="https://github.com/yinghanwen/arashi/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=yinghanwen/arashi&max=1000"/>
 
-</a>
+```dev``` 分支是 Arashi 的开发分支，因为之前有过被人 git push -f 的惨痛经历，所以不对任何人开放。
+
+如果你想参与到 Arashi 的开发中，请先 fork 本仓库，然后在你的仓库修改好后，向本仓库的 ```arashi:dev``` 提出 Pull Request.
+
+请确保你的 commit 是规范的，代码风格和项目已有代码保持一致，感谢你对 Arashi 的贡献。
