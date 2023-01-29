@@ -9,7 +9,6 @@ from websockets.legacy.client import connect, WebSocketClientProtocol as WSClien
 
 from .context import Context
 from .plugin import PluginPool
-from .config import WS_URL
 from .log import logger
 
 
@@ -55,7 +54,7 @@ class Client:
                 logger.warning("Connection closed, retrying in 5 seconds...")
                 await asyncio.sleep(5)
             except ConnectionRefusedError:
-                logger.warning(f"{WS_URL} refused connection, retrying in 10 seconds...")
+                logger.warning(f"{self.url} refused connection, retrying in 10 seconds...")
                 await asyncio.sleep(5)
             except Exception as e:
                 logger.error(repr(e))
