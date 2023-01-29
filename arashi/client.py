@@ -1,8 +1,8 @@
 """
 Arashi 的 Websockets 连接
-"""
-import asyncio
+""" 
 import ujson as json
+import time
 
 
 from typing import Union
@@ -17,7 +17,7 @@ from arashi.plugins import plugin_list
 
 class Client:
 
-    async def ws_client(self, ws_server: str):
+    async def _listen_ws(self, ws_server: str):
         """建立 WS 链接"""
         async with connect(ws_server) as ws:
             if "meta_event_type" in json.loads(await ws.recv()):
@@ -46,24 +46,23 @@ class Client:
                 logger.info(f"Matched Command -> {context.get('raw_message')}")
                 await p.handle()
     
-    def run(self):
+    async def listen(self):
         while True:
             try:
-                self.ws_client(WS_URL)
+                await self._listen_ws(WS_URL)
             except KeyboardInterrupt:
-                logger.warning("Closing connection by user.")
+                logger.warning("Closing connection by user")
                 exit(0)
             except ConnectionClosedError:
                 logger.warning("Connection closed, retrying in 5 seconds...")
-                asyncio.sleep(5)
+                await time.sleep(5)
                 continue
             except ConnectionRefusedError:
                 logger.warning(f"{WS_URL} refused connection, retrying in 10 seconds...")
-                asyncio.sleep(10)
+                await time.sleep(5)
                 continue
             except Exception as e:
                 logger.error(repr(e))
                 logger.warning(f"Retrying in 10 seconds...")
-                asyncio.sleep(10)
+                await time.sleep(10)
                 continue
-    

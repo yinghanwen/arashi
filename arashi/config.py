@@ -1,4 +1,4 @@
-"""arashi 的 config 后续改成yaml"""
+"""arashi 的 config, 后续改成yaml"""
 # ws
 enable = True
 host = "0.0.0.0"
