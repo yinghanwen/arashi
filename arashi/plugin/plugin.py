@@ -30,7 +30,7 @@ class Plugin:
     def description(self) -> str:
         return self._description
 
-    def receive(self, rule: "Rule") -> Callable[[ReceiverHandler], ReceiverHandler]:
+    def receive(self, rule: "Rule") -> Callable[["ReceiverHandler"], "ReceiverHandler"]:
         def wrapper(handler: "ReceiverHandler"):
             self._receivers.append(Receiver(rule, handler))
             return handler
