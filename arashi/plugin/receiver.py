@@ -3,7 +3,7 @@ from typing import Callable, Awaitable, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .rule import Rule
-    from ..context import Context
+    from arashi.context import Context
 
 ReceiverHandler = Callable[[Context], Awaitable[None] | None]
 

@@ -3,9 +3,9 @@ import importlib
 from typing import TYPE_CHECKING, Iterable
 from itertools import chain
 
-from ..log import logger
-from ..plugin import Plugin
-from ..internal import Singleton
+from arashi.log import logger
+from arashi.plugin import Plugin
+from arashi.internal.singleton import Singleton
 
 if TYPE_CHECKING:
     from ..context import Context

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Union, Callable, Awaitable
 
 
 if TYPE_CHECKING:
-    from ..context import Context
+    from arashi.context import Context
 
 
 class Rule:

@@ -2,7 +2,7 @@ import asyncio
 from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ..context import Context
+    from arashi.context import Context
     from .rule import Rule
     from .receiver import Receiver, ReceiverHandler
 
