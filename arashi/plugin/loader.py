@@ -1,14 +1,11 @@
-import asyncio
 import importlib
-from typing import TYPE_CHECKING, Iterable
+from typing import Iterable
 from itertools import chain
 
 from arashi.log import logger
 from arashi.plugin import Plugin
 from arashi.internal.singleton import Singleton
 
-if TYPE_CHECKING:
-    from ..context import Context
 
 
 class PluginLoader(Singleton):
@@ -40,8 +37,4 @@ class PluginLoader(Singleton):
         遍历所有插件。
         :return: 用来遍历插件的迭代器。
         """
-
-        return chain.from_iterable(self.plugins.values())
-
-    async def run_plugins(self, ctx: "Context") -> None:
-        await asyncio.gather(p.do_receive(ctx) for p in self)
+        yield from chain.from_iterable(self.plugins.values())
