@@ -10,12 +10,13 @@ from typing import Union
 from websockets.exceptions import ConnectionClosedError
 from websockets.legacy.client import connect, WebSocketClientProtocol as WSClient
 
-from arashi.config import WS_URL
 from arashi.log import logger
 from arashi.plugins import plugin_list
 
 
 class Client:
+    
+    url = "ws://127.0.0.1:8081/"
 
     async def _listen_ws(self, ws_server: str):
         """建立 WS 链接"""
@@ -49,7 +50,7 @@ class Client:
     async def listen(self):
         while True:
             try:
-                await self._listen_ws(WS_URL)
+                await self._listen_ws(self.url)
             except KeyboardInterrupt:
                 logger.warning("Closing connection by user")
                 exit(0)
