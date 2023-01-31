@@ -4,6 +4,8 @@
 
 _✨ A new python bot framework ✨_
 
+[English](https://raw.githubusercontent.com/yinghanwen/arashi/master/README_en.md)
+
 <p align="center">
   <a href="https://raw.githubusercontent.com/yinghanwen/arashi/master/LICENSE">
     <img src="https://img.shields.io/github/license/yinghanwen/arashi.svg" alt="license">
@@ -22,11 +24,9 @@ Arashi 是一个 Python 异步机器人框架，目前仍在开发中。
 >该项目为 风暴 的罗马音，灵感来源：Arcaea。
 
 ## 特色
--**文档完善** Arashi 深知萌新开发者的不易，开发者们精心编写文档，以后还会有源码解读，cookbook 等。
+-**文档完善** Arashi 成员深知萌新开发者的不易，因此我们精心编写文档，以后还会有源码解读，cookbook 等。
 
 -**优秀的单元测试** 测试总是令你头疼？没关系，Arashi 独有的 Seiun 单元测试系统能帮助您测试插件。
-
--**可自由切换适配器** Arashi 借鉴了 Gentoo 的 eselect 功能，可以自由切换适配器。
 
 
 ## 即刻开始
