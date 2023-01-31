@@ -12,6 +12,7 @@ class Client:
     def __init__(self, url: str):
         self.tasks: set[asyncio.Task] = set()
         self.url = url
+
     async def _listen(self):
         if count := len(self.tasks):
             logger.warning(f"Removing undone {count} tasks before listening.")
@@ -23,6 +24,7 @@ class Client:
                 task = asyncio.create_task(self.handle_message(ws, message))
                 self.tasks.add(task)
                 task.add_done_callback(self.tasks.discard)
+                
     async def handle_message(self, ws: WSClient, message: str | bytes):
         # https://github.com/botuniverse/onebot-11/blob/master/event/README.md
         if isinstance(message, bytes):

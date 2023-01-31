@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING
-from ..plugin import Plugin, command
+from arashi.plugin import Plugin, command
 
 if TYPE_CHECKING:
-    from ..context import Context
+    from arashi.context import Context
 
 
 plugin = Plugin(
