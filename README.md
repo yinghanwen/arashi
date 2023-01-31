@@ -4,6 +4,8 @@
 
 _✨ A new python bot framework ✨_
 
+[English](https://raw.githubusercontent.com/yinghanwen/arashi/master/README_en.md)
+
 <p align="center">
   <a href="https://raw.githubusercontent.com/yinghanwen/arashi/master/LICENSE">
     <img src="https://img.shields.io/github/license/yinghanwen/arashi.svg" alt="license">
@@ -67,6 +69,7 @@ Discord Bot 协议
 A library for building WebSocket servers and clients in Python with a focus on correctness, simplicity, robustness, and performance.
 
 状态：开发中
+
 维护者：官方
 
 ## 开源协议
