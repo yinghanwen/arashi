@@ -87,7 +87,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ## 贡献
 
 
-```dev``` 分支是 Arashi 的开发分支，因为之前有过被人 git push -f 的惨痛经历，所以不对任何人开放。
+```dev``` 分支是 Arashi 的开发分支，因为之前有过被人 ```git push -f``` 的惨痛经历，所以不对任何人开放。
 
 如果你想参与到 Arashi 的开发中，请先 fork 本仓库，然后在你的仓库修改好后，向本仓库的 ```arashi:dev``` 提出 Pull Request.
 
